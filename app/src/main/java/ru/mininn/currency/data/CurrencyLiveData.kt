@@ -1,6 +1,7 @@
 package ru.mininn.currency.data
 
 import android.arch.lifecycle.LiveData
+import android.util.Log
 import ru.mininn.currency.data.api.CurrencyAPI
 import ru.mininn.currency.data.model.Responce
 import rx.android.schedulers.AndroidSchedulers
@@ -43,6 +44,8 @@ class CurrencyLiveData : LiveData<Responce>() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { result -> value = result })
+                        { result ->
+                                value = result
+                        Log.d("asdasd", "data updated.")})
     }
 }
