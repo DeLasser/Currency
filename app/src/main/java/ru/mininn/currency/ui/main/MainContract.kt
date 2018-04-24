@@ -1,4 +1,4 @@
-package ru.mininn.currency.ui
+package ru.mininn.currency.ui.main
 
 import android.os.Bundle
 import ru.mininn.currency.data.model.Responce

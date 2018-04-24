@@ -1,19 +1,20 @@
 package ru.mininn.currency.data
 
 import android.arch.lifecycle.LiveData
-import android.util.Log
 import ru.mininn.currency.data.api.CurrencyAPI
 import ru.mininn.currency.data.model.Responce
+import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
-import rx.internal.operators.EmptyObservableHolder
 import rx.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 
 class CurrencyLiveData : LiveData<Responce>() {
-    var isActive: Boolean = false
+    private var subscription: Subscription? = null
 
-    private object Holder { val INSTANCE = CurrencyLiveData() }
+    private object Holder {
+        val INSTANCE = CurrencyLiveData()
+    }
 
     companion object {
         val instance: CurrencyLiveData by lazy { Holder.INSTANCE }
@@ -21,31 +22,37 @@ class CurrencyLiveData : LiveData<Responce>() {
 
     override fun onInactive() {
         super.onInactive()
-        isActive = false
-
+        unsubscribe()
     }
 
     override fun onActive() {
         super.onActive()
-        isActive = true
         startDataUpdating()
     }
 
     fun startDataUpdating() {
-        CurrencyAPI.create()
+        unsubscribe()
+        subscription = CurrencyAPI.create()
                 .getCurrencyList()
                 .repeatWhen { completed ->
-                    if (isActive) {
-                        return@repeatWhen completed.delay(5, TimeUnit.SECONDS)
-                    } else {
-                        return@repeatWhen EmptyObservableHolder.instance<Any>()
-                    }
+                    return@repeatWhen completed.delay(15, TimeUnit.SECONDS)
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { result ->
-                                value = result
-                        Log.d("asdasd", "data updated.")})
+                            value = result
+                        }, { error ->
+                    val respounce = Responce(null, null)
+                    respounce.error = error.message
+                    value = respounce
+                })
     }
+
+    private fun unsubscribe() {
+        if (subscription != null) {
+            subscription!!.unsubscribe()
+        }
+    }
+
 }

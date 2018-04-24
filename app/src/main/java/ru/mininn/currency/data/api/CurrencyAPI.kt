@@ -1,6 +1,5 @@
 package ru.mininn.currency.data.api
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
@@ -19,7 +18,7 @@ interface CurrencyAPI {
 
     companion object {
         fun create(): CurrencyAPI {
-            val  gson = GsonBuilder().registerTypeAdapter(Currency::class.java, CurrencyDeserializer())
+            val gson = GsonBuilder().registerTypeAdapter(Currency::class.java, CurrencyDeserializer())
             val retrofit = Retrofit.Builder()
                     .addCallAdapterFactory(
                             RxJavaCallAdapterFactory.create())

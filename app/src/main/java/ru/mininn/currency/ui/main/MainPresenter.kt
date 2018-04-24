@@ -1,8 +1,7 @@
-package ru.mininn.currency.ui
+package ru.mininn.currency.ui.main
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.util.Log
 import ru.mininn.currency.data.CurrencyLiveData
 import ru.mininn.currency.data.model.Responce
 
@@ -18,12 +17,10 @@ class MainPresenter(var view: MainContract.View) : MainContract.Presenter, Obser
     }
 
     override fun onStart() {
-        Log.d("asdasd", "onStart")
         CurrencyLiveData.instance.observeForever(this)
     }
 
     override fun onStop() {
-        Log.d("asdasd", "onStop")
         CurrencyLiveData.instance.removeObserver(this)
     }
 
