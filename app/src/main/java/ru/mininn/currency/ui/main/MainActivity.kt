@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item!!.itemId == R.id.action_update) {
-            CurrencyLiveData.instance.startDataUpdating()
+            presenter.requestNewData()
         }
         return true
     }
